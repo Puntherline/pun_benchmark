@@ -7,37 +7,7 @@ local dist_results = config.lua_server_dist_results
 local dist1_iterations = config.lua_server_dist1_iterations
 local dist2_iterations = config.lua_server_dist2_iterations
 local concat_string_length = config.concat_string_length
-
 local concat_string_length = config.concat_string_length
-
-local client_starts = {}
-local client_times = {}
-
-RegisterNetEvent("pun_benchmark:start")
-AddEventHandler("pun_benchmark:start", function()
-	local _source = tostring(source)
-	local start = os.clock() * 1000
-	client_starts[_source] = start
-end)
-
-RegisterNetEvent("pun_benchmark:finish")
-AddEventHandler("pun_benchmark:finish", function()
-	local _source = tostring(source)
-	local finish = os.clock() * 1000
-
-	if client_times[_source] == nil then
-		client_times[_source] = {}
-	end
-
-	table.insert(client_times[_source], finish - client_starts[_source])
-end)
-
-RegisterNetEvent("pun_benchmark:done")
-AddEventHandler("pun_benchmark:done", function()
-	local _source = source
-	TriggerClientEvent("pun_benchmark:printData", _source, table.concat(client_times[tostring(_source)], "\n"))
-	client_times[tostring(_source)] = {}
-end)
 
 local string_format = string.format
 local string_sub = string.sub

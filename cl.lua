@@ -25,7 +25,7 @@ local function runConcat(variation)
 	-- Running benchmark x times
 	local times = {}
 	for i = 1, concat_results do
-		TriggerServerEvent("pun_benchmark:start")
+		local start = GetNetworkTimeAccurate()
 
 		-- Benchmark | Method one (often used)
 		if variation == 1 then
@@ -63,24 +63,26 @@ local function runConcat(variation)
 			end
 		end
 
-		TriggerServerEvent("pun_benchmark:finish")
+		local finish = GetNetworkTimeAccurate()
+		table_insert(times, math_floor(finish - start))
 		Wait(2000)
 	end
 
 	-- Printing out times it took
-	TriggerServerEvent("pun_benchmark:done")
+	print(table_concat(times, "\n"))
 end
 
 local function runDist(variation)
 
 	-- Wait 5 seconds before starting the benchmark
+	local times = {}
 	print(string_format("Starting LUA distance calculation type %d benchmark in 5 seconds.", variation))
 	Wait(5000)
 
 	-- Running benchmark x times
 	local times = {}
 	for i = 1, dist_results do
-		TriggerServerEvent("pun_benchmark:start")
+		local start = GetNetworkTimeAccurate()
 
 		-- Benchmark | Method one (excluding Z / height)
 		if variation == 1 then
@@ -100,12 +102,13 @@ local function runDist(variation)
 			end
 		end
 
-		TriggerServerEvent("pun_benchmark:finish")
+		local finish = GetNetworkTimeAccurate()
+		table_insert(times, math_floor(finish - start))
 		Wait(2000)
 	end
 
 	-- Printing out times it took
-	TriggerServerEvent("pun_benchmark:done")
+	print(table_concat(times, "\n"))
 end
 
 local function getSelectedBenchmark(source, args, raw_command)
@@ -125,8 +128,3 @@ local function getSelectedBenchmark(source, args, raw_command)
 end
 
 RegisterCommand("benchmark_lua", getSelectedBenchmark, false)
-
-RegisterNetEvent("pun_benchmark:printData")
-AddEventHandler("pun_benchmark:printData", function(data)
-	print(data)
-end)
